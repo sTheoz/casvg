@@ -48,7 +48,7 @@ Expr:
   | REMOVE NODE ID                            { removeNode($3); }
   | REMOVE EDGE FROM ID TO ID                 { removeEdge($4, $6); }
   | MOVE Attrs                                { doMove(); }
-  | RENAME ID WITH ID                         { printf("Create node\n");/*RenameNode($2, $4);*/}
+  | RENAME ID WITH ID                         { renameObject($2,$4); }
   | EDIT ID WITH Attrs                        { printf("Create node\n");/*EditNode($2);*/}
   | EDIT EDGE FROM ID TO ID WITH Attrs        { printf("Create node\n");/*EditEdge($4, $6);*/}
   | DUMP EOL        				                  { dump(); }

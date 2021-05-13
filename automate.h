@@ -6,6 +6,7 @@ typedef struct edge edge;
 typedef struct svg svg;
 typedef struct svgEdge svgEdge;
 typedef struct strList strList;
+typedef struct position position;
 
 void createNode(char* id);
 void createEdge(char* idfrom, char* idto);

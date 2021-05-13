@@ -2,6 +2,7 @@
 #include <stdlib.h>
 #include <stdio.h>
 #include <string.h>
+#include <strings.h>
 
 struct node
 {
@@ -41,11 +42,17 @@ struct strList{
     struct strList* next;
 };
 
+struct position{
+    int x;
+    int y;
+};
+
 struct svg* casvg;
 struct svgEdge* esvg;
 struct node* currentNode;
 struct edge* currentEdge;
 struct strList* currentStrList;
+struct position* pos;
 
 void createNode(char* id){
     if(!currentNode){
@@ -82,6 +89,24 @@ void createEdge(char* idfrom, char* idto){
 }
 
 void removeNode(char* id){
+    svg* currentNodeListe = casvg;
+    svg* prevNode;
+    while(currentNodeListe && (strcmp(currentNodeListe->head->id, id) != 0 )){
+        prevNode = currentNodeListe;
+        currentNodeListe = currentNodeListe->next;
+    }
+    if(strcmp(currentNodeListe->head->id, id) == 0 ){
+        if(currentNodeListe->next && prevNode){
+            prevNode->next = currentNodeListe->next;
+        }else if(!prevNode && currentNodeListe->next){
+            casvg = currentNodeListe->next;
+        }else if(prevNode && !currentNodeListe->next){
+            prevNode->next = NULL;
+        }
+        free(currentNodeListe);
+    }else{
+        fprintf(stderr, "Error: ID not found\n");
+    }
     return;
 }
 
@@ -90,11 +115,11 @@ void removeEdge(char* idfrom, char* idto){
 }
 
 void move(int dx, int dy){
-    if(!currentEdge){
-        currentEdge = (edge*) malloc(sizeof(edge));
+    if(!pos){
+        pos = (position*) malloc(sizeof(position));
     }
-    currentEdge->posx = dx;
-    currentEdge->posy = dy;
+    pos->x = dx;
+    pos->y = dy;
     return;
 }
 
@@ -102,8 +127,8 @@ void doMove(){
     if(!currentStrList){
         svg* currentSvg = casvg;
         while(currentSvg){
-            currentSvg->head->posx = currentSvg->head->posx + currentEdge->posx;
-            currentSvg->head->posy = currentSvg->head->posy + currentEdge->posy;
+            currentSvg->head->posx = currentSvg->head->posx + pos->x;
+            currentSvg->head->posy = currentSvg->head->posy + pos->y;
             currentSvg = currentSvg->next;
         }
     }else{
@@ -113,12 +138,12 @@ void doMove(){
         while(currentStrList){
             currentID = currentStrList->val;
             currentSvg = casvg;
-            while(currentSvg->head->id != currentID){
+            while((currentSvg != NULL) && (strcmp(currentSvg->head->id, currentID)!=0)){
                 currentSvg = currentSvg->next;
             }
-            if(currentID == currentSvg->head->id){       
-                currentSvg->head->posx = currentSvg->head->posx + currentEdge->posx;
-                currentSvg->head->posy = currentSvg->head->posy + currentEdge->posy;
+            if(strcmp(currentSvg->head->id, currentID)==0){       
+                currentSvg->head->posx = currentSvg->head->posx + pos->x;
+                currentSvg->head->posy = currentSvg->head->posy + pos->y;
             }else{
                 fprintf(stderr,"Error: ID not found");
             }
@@ -127,7 +152,8 @@ void doMove(){
             free(prevList);
         }
     }
-    free(currentEdge);
+    free(pos);
+    pos = NULL;
     return;
 }
 
