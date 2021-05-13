@@ -44,11 +44,10 @@ Line:
 
 Expr:
    CREATE NODE ID Attrs                      { createNode($3);setNode(); }
-  | CREATE EDGE FROM ID TO ID Attrs           { printf("Create node\n");/*CreateEdge($4, $6);*/}
-  | REMOVE NODE ID Attrs                      { printf("Create node\n");/*RemoveNode($3);*/}
-  | REMOVE EDGE FROM ID TO ID Attrs           { printf("Create node\n");/*RemoveEdge($4, $6);*/}
-  | MOVE NUM NUM                              { printf("Create node\n");/*MoveNodes($2, $3);*/}
-  | MOVE ID NUM NUM                           { printf("Create node\n");/*MoveNode($2, $3, $4);*/}
+  | CREATE EDGE FROM ID TO ID Attrs           { createEdge($4, $6); setEdge(); }
+  | REMOVE NODE ID                            { removeNode($3); }
+  | REMOVE EDGE FROM ID TO ID                 { removeEdge($4, $6); }
+  | MOVE Attrs                                { doMove(); }
   | RENAME ID WITH ID                         { printf("Create node\n");/*RenameNode($2, $4);*/}
   | EDIT ID WITH Attrs                        { printf("Create node\n");/*EditNode($2);*/}
   | EDIT EDGE FROM ID TO ID WITH Attrs        { printf("Create node\n");/*EditEdge($4, $6);*/}
@@ -57,14 +56,17 @@ Expr:
   ;
 
 Attrs:
-    EOL                             { printf("Terminus\n");}
-  | AT NUM NUM Attrs            { setPosition($2,$3); }
+    EOL                          { printf("Terminus\n");}
+  | AT NUM NUM Attrs             { setPosition($2,$3); }
   | LABEL LABELVALUE Attrs       { setLabel($2); }
   | COLOR LABELVALUE Attrs       { setColor($2);}
   | BGCOLOR LABELVALUE Attrs     { setBackgroundColor($2); }
   | SIZE NUM Attrs               { setSize($2); }
   | INITIAL LABELVALUE Attrs     { setInitial($2); }
   | FINAL LABELVALUE Attrs       { setFinal($2); }
+  | PATH LABELVALUE Attrs        { setPath($2); }
+  | ID Attrs                     { addToList($1);}
+  | NUM NUM                      { move($1,$2); }
 
 %%
 

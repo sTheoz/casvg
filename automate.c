@@ -31,8 +31,21 @@ struct svg{
     struct svg* next;
 };
 
+struct svgEdge{
+    struct edge* head;
+    struct svgEdge* next;
+};
+
+struct strList{
+    char* val;
+    struct strList* next;
+};
+
 struct svg* casvg;
+struct svgEdge* esvg;
 struct node* currentNode;
+struct edge* currentEdge;
+struct strList* currentStrList;
 
 void createNode(char* id){
     if(!currentNode){
@@ -52,7 +65,19 @@ void initNode(node* n){
     if(!n->label)n->label = n->id;
 }
 
+void initEdge(edge* e){
+    if(!e->color)e->color = "BLACK";
+    if(!e->path)e->path = "default";
+    if(!e->posx)e->posx = 0;
+    if(!e->posy)e->posy = 0;
+}
+
 void createEdge(char* idfrom, char* idto){
+    if(!currentEdge){
+        currentEdge = (edge*) malloc(sizeof(edge));
+    }
+    currentEdge->idfrom = idfrom;
+    currentEdge->idto = idto;
     return;
 }
 
@@ -65,14 +90,60 @@ void removeEdge(char* idfrom, char* idto){
 }
 
 void move(int dx, int dy){
+    if(!currentEdge){
+        currentEdge = (edge*) malloc(sizeof(edge));
+    }
+    currentEdge->posx = dx;
+    currentEdge->posy = dy;
     return;
 }
 
-void moveWID(char* id, int dx, int dy){
+void doMove(){
+    if(!currentStrList){
+        svg* currentSvg = casvg;
+        while(currentSvg){
+            currentSvg->head->posx = currentSvg->head->posx + currentEdge->posx;
+            currentSvg->head->posy = currentSvg->head->posy + currentEdge->posy;
+            currentSvg = currentSvg->next;
+        }
+    }else{
+        svg* currentSvg;
+        char* currentID;
+        strList* prevList;
+        while(currentStrList){
+            currentID = currentStrList->val;
+            currentSvg = casvg;
+            while(currentSvg->head->id != currentID){
+                currentSvg = currentSvg->next;
+            }
+            if(currentID == currentSvg->head->id){       
+                currentSvg->head->posx = currentSvg->head->posx + currentEdge->posx;
+                currentSvg->head->posy = currentSvg->head->posy + currentEdge->posy;
+            }else{
+                fprintf(stderr,"Error: ID not found");
+            }
+            prevList = currentStrList;
+            currentStrList = currentStrList->next;
+            free(prevList);
+        }
+    }
+    free(currentEdge);
     return;
 }
 
-void moveWIDs(char** tab, int dx, int dy){
+void addToList(char* id){
+    strList* list = (strList*) malloc(sizeof(strList));
+    list->val = id;
+    list->next = NULL;
+    if(!currentStrList){
+        currentStrList = list;
+    }else{
+        strList* strList = currentStrList;
+        while(strList->next != NULL){
+            strList = strList->next;
+        }
+        strList->next = list;
+    }
     return;
 }
 
@@ -104,6 +175,17 @@ void dump(){
         casvg = casvg->next;
     }
     printf("Edges:\n");
+    while(esvg){
+        printf("ID From: %s\n", esvg->head->idfrom);
+        printf("ID To: %s\n", esvg->head->idto);
+        printf("Color: %s\n", esvg->head->color);
+        printf("X: %d\n", esvg->head->posx);
+        printf("Y: %d\n", esvg->head->posy);
+        printf("Label: %s\n", esvg->head->label);
+        printf("Path: %s\n", esvg->head->path);
+        printf("========\n");
+        esvg = esvg->next;
+    }
     return;
 }
 
@@ -169,6 +251,14 @@ void setFinal(char* dir){
     return;
 }
 
+void setPath(char* path){
+    if(!currentEdge){
+        currentEdge = (edge*) malloc(sizeof(edge));
+    }
+    currentEdge->path = path;
+    return;
+}
+
 void setNode(){
     initNode(currentNode);
     svg* newsvg = (svg*) malloc(sizeof(svg));
@@ -184,15 +274,28 @@ void setNode(){
         currentsvg->next = newsvg;
     }
     currentNode = NULL;
-    /*
-    printf("%s\n", currentNode->color);
-    printf("%s\n", currentNode->bgcolor);
-    printf("%s\n", currentNode->id);
-    printf("%d\n", currentNode->posx);
-    printf("%d\n", currentNode->posy);
-    printf("%s\n", currentNode->label);
-    printf("%d\n", currentNode->size);
-    printf("%s\n", currentNode->final);
-    printf("%s\n", currentNode->init);*/
+    return;
+}
+
+void setEdge(){
+    if(currentNode->label)currentEdge->label = currentNode->label;
+    if(currentNode->color)currentEdge->color = currentNode->color;
+    if(currentNode->posx)currentEdge->posx = currentNode->posx;
+    if(currentNode->posy)currentEdge->posy = currentNode->posy;
+    initEdge(currentEdge);
+    svgEdge* newsvg = (svgEdge*) malloc(sizeof(svgEdge));
+    newsvg->next = NULL;
+    newsvg->head = currentEdge;
+    if(!esvg){
+        esvg = newsvg;
+    }else{
+        svgEdge* currentsvg = esvg;
+        while(currentsvg->next != NULL){
+            currentsvg = currentsvg->next;
+        }
+        currentsvg->next = newsvg;
+    }
+    currentNode = NULL;
+    currentEdge = NULL;
     return;
 }
