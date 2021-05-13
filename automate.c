@@ -89,21 +89,21 @@ void createEdge(char* idfrom, char* idto){
 }
 
 void removeNode(char* id){
-    svg* currentNodeListe = casvg;
+    svg* currentNodeList = casvg;
     svg* prevNode;
-    while(currentNodeListe && (strcmp(currentNodeListe->head->id, id) != 0 )){
-        prevNode = currentNodeListe;
-        currentNodeListe = currentNodeListe->next;
+    while(currentNodeList && (strcmp(currentNodeList->head->id, id) != 0 )){
+        prevNode = currentNodeList;
+        currentNodeList = currentNodeList->next;
     }
-    if(strcmp(currentNodeListe->head->id, id) == 0 ){
-        if(currentNodeListe->next && prevNode){
-            prevNode->next = currentNodeListe->next;
-        }else if(!prevNode && currentNodeListe->next){
-            casvg = currentNodeListe->next;
-        }else if(prevNode && !currentNodeListe->next){
+    if(strcmp(currentNodeList->head->id, id) == 0 ){
+        if(currentNodeList->next && prevNode){
+            prevNode->next = currentNodeList->next;
+        }else if(!prevNode && currentNodeList->next){
+            casvg = currentNodeList->next;
+        }else if(prevNode && !currentNodeList->next){
             prevNode->next = NULL;
         }
-        free(currentNodeListe);
+        free(currentNodeList);
     }else{
         fprintf(stderr, "Error: ID not found\n");
     }
@@ -111,6 +111,24 @@ void removeNode(char* id){
 }
 
 void removeEdge(char* idfrom, char* idto){
+    svgEdge* currentEdgeList = casvg;
+    svgEdge* prevEdge;
+    while(currentEdgeList && (strcmp(currentEdgeList->head->idfrom, idfrom) != 0 ) && (strcmp(currentEdgeList->head->idto, idto) != 0 ) ){
+        prevEdge = currentEdgeList;
+        currentEdgeList = currentEdgeList->next;
+    }
+    if((strcmp(currentEdgeList->head->idfrom, idfrom) == 0 ) && (strcmp(currentEdgeList->head->idto, idto) == 0 ) ){
+        if(currentEdgeList->next && prevEdge){
+            prevEdge->next = currentEdgeList->next;
+        }else if(!prevEdge && currentEdgeList->next){
+            casvg = currentEdgeList->next;
+        }else if(prevEdge && !currentEdgeList->next){
+            prevEdge->next = NULL;
+        }
+        free(currentEdgeList);
+    }else{
+        fprintf(stderr, "Error: ID not found\n");
+    }
     return;
 }
 
