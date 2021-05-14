@@ -3,9 +3,9 @@
 *.dot
 *.tab.*
 *.output
-example.svg
 *.png
 lex.yy.c
+*.svg
 
 # Object files
 *.o
