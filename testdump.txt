@@ -7,10 +7,5 @@ CREATE EDGE FROM z to z LABEL "a"
 create edge from z to u label "b" 
 create edge from u to z label "b" 
 create edge from z to f label "a"
-move i z u 100 1000
 CREATE EDGE FROM z to u LABEL "g"
-move 200 2000
-Remove node i
-remove edge from z to z
-rename z with q
 dump "lol"

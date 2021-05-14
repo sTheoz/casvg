@@ -5,49 +5,6 @@
 #include <string.h>
 #include <strings.h>
 
-struct node
-{
-    char* id;
-    int posx;
-    int posy;
-    char* label;
-    char* color;
-    char* bgcolor;
-    int size;
-    char* init;
-    char* final;
-};
-
-struct edge{
-    char* idfrom;
-    char* idto;
-    char* label;
-    char* path;
-    char* color;
-    int posx;
-    int posy;
-};
-
-struct svg{
-    struct node* head;
-    struct svg* next;
-};
-
-struct svgEdge{
-    struct edge* head;
-    struct svgEdge* next;
-};
-
-struct strList{
-    char* val;
-    struct strList* next;
-};
-
-struct position{
-    int x;
-    int y;
-};
-
 struct svg* casvg;
 struct svgEdge* esvg;
 struct node* currentNode;
@@ -69,7 +26,7 @@ void initNode(node* n){
     if(!n->final)n->final = "EAST";
     if(!n->posx)n->posx = 0;
     if(!n->posy)n->posy = 0;
-    if(!n->size)n->size = 1;
+    if(!n->size)n->size = 30;
     if(!n->label)n->label = n->id;
 }
 

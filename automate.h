@@ -8,6 +8,49 @@ typedef struct svgEdge svgEdge;
 typedef struct strList strList;
 typedef struct position position;
 
+struct node
+{
+    char* id;
+    int posx;
+    int posy;
+    char* label;
+    char* color;
+    char* bgcolor;
+    int size;
+    char* init;
+    char* final;
+};
+
+struct edge{
+    char* idfrom;
+    char* idto;
+    char* label;
+    char* path;
+    char* color;
+    int posx;
+    int posy;
+};
+
+struct svg{
+    struct node* head;
+    struct svg* next;
+};
+
+struct svgEdge{
+    struct edge* head;
+    struct svgEdge* next;
+};
+
+struct strList{
+    char* val;
+    struct strList* next;
+};
+
+struct position{
+    int x;
+    int y;
+};
+
 void createNode(char* id);
 void createEdge(char* idfrom, char* idto);
 void removeNode(char* id);
