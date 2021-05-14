@@ -1,4 +1,5 @@
 #include "automate.h"
+#include "drawSVG.h"
 #include <stdlib.h>
 #include <stdio.h>
 #include <string.h>
@@ -90,13 +91,13 @@ void createEdge(char* idfrom, char* idto){
 
 void removeNode(char* id){
     svg* currentNodeList = casvg;
-    svg* prevNode;
+    svg* prevNode = NULL;
     while(currentNodeList && (strcmp(currentNodeList->head->id, id) != 0 )){
         prevNode = currentNodeList;
         currentNodeList = currentNodeList->next;
     }
     if(strcmp(currentNodeList->head->id, id) == 0 ){
-        if(currentNodeList->next && prevNode){
+        if((currentNodeList->next != NULL) && (prevNode != NULL)){
             prevNode->next = currentNodeList->next;
         }else if(!prevNode && currentNodeList->next){
             casvg = currentNodeList->next;
@@ -104,6 +105,7 @@ void removeNode(char* id){
             prevNode->next = NULL;
         }
         free(currentNodeList);
+        currentNodeList = NULL;
     }else{
         fprintf(stderr, "Error: ID not found\n");
     }
@@ -111,17 +113,17 @@ void removeNode(char* id){
 }
 
 void removeEdge(char* idfrom, char* idto){
-    svgEdge* currentEdgeList = casvg;
-    svgEdge* prevEdge;
-    while(currentEdgeList && (strcmp(currentEdgeList->head->idfrom, idfrom) != 0 ) && (strcmp(currentEdgeList->head->idto, idto) != 0 ) ){
+    svgEdge* currentEdgeList = esvg;
+    svgEdge* prevEdge = NULL;
+    while(currentEdgeList && ((strcmp(currentEdgeList->head->idfrom, idfrom) != 0 ) || (strcmp(currentEdgeList->head->idto, idto) != 0 ) )){
         prevEdge = currentEdgeList;
         currentEdgeList = currentEdgeList->next;
     }
     if((strcmp(currentEdgeList->head->idfrom, idfrom) == 0 ) && (strcmp(currentEdgeList->head->idto, idto) == 0 ) ){
-        if(currentEdgeList->next && prevEdge){
+        if((currentEdgeList->next != NULL) && (prevEdge != NULL)){
             prevEdge->next = currentEdgeList->next;
         }else if(!prevEdge && currentEdgeList->next){
-            casvg = currentEdgeList->next;
+            esvg = currentEdgeList->next;
         }else if(prevEdge && !currentEdgeList->next){
             prevEdge->next = NULL;
         }
@@ -191,7 +193,17 @@ void addToList(char* id){
     return;
 }
 
+// Rename node without change edges with the old name
 void renameObject(char* oldid, char* newid){
+    svg* currentNode = casvg;
+    while(currentNode && currentNode->next && (strcmp(currentNode->head->id, oldid) != 0)){
+        currentNode = currentNode->next;
+    }
+    if(strcmp(currentNode->head->id, oldid) == 0){
+        currentNode->head->id = newid;
+        return;
+    }
+    fprintf(stderr, "Error: ID not found\n");
     return;
 }
 
@@ -234,7 +246,10 @@ void dump(){
 }
 
 void dumpSVG(char* name){
+    name = name+1;
+    name[strlen(name)-1] = '\0';
     printf("Nom du fichier: %s.svg \n",name);
+    draw(name, casvg, esvg);
     return;
 }
 

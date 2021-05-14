@@ -1,5 +1,5 @@
 BIN= casvg
-OBJ=  $(BIN).tab.o automate.o lex.yy.o
+OBJ=  $(BIN).tab.o automate.o lex.yy.o drawSVG.o
 but:=bin
 #	$(CC) -c lex.yy.c -o lex.yy.o
 #	$(CC) -c $(BIN).tab.c -o $(BIN).tab.o
@@ -19,4 +19,4 @@ yacc: $(BIN).y
 	$(CC) -c $< -o $@
 
 clean:
-	rm -fv $(BIN).bin lex.yy.c lex.yy.o *~ $(OBJ)
+	rm -fv $(BIN).bin lex.yy.c lex.yy.o *~ $(OBJ) lol.svg
