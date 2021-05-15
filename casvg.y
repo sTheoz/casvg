@@ -8,6 +8,7 @@
 #include "automate.h"
 int yyerror(char*);
 int yylex(void);
+extern FILE *yyin;
 
 %}
 
@@ -75,6 +76,15 @@ int yyerror(char *s) {
     return 0;
 }
 
-int main(void) {
+int main(int argc, char **argv) {
+  /* Process command line args*/
+  if(argc != 1){
+    yyin = fopen(argv[1], "r");
     yyparse();
+    fclose(yyin);
+    return 0;
+  }
+  yyparse();
+  return 0;
 }
+  
