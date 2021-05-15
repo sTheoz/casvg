@@ -49,14 +49,14 @@ Expr:
   | REMOVE EDGE FROM ID TO ID                 { removeEdge($4, $6); }
   | MOVE Attrs                                { doMove(); }
   | RENAME ID WITH ID                         { renameObject($2,$4); }
-  | EDIT ID WITH Attrs                        { printf("Create node\n");/*EditNode($2);*/}
-  | EDIT EDGE FROM ID TO ID WITH Attrs        { printf("Create node\n");/*EditEdge($4, $6);*/}
+  | EDIT ID WITH Attrs                        { editNode($2); }
+  | EDIT EDGE FROM ID TO ID WITH Attrs        { editEdge($4,$6); }
   | DUMP EOL        				                  { dump(); }
   | DUMP LABELVALUE                           { dumpSVG($2); }
   ;
 
 Attrs:
-    EOL                          { printf("Terminus\n");}
+    EOL                          { /*printf("Terminus\n");*/}
   | AT NUM NUM Attrs             { setPosition($2,$3); }
   | LABEL LABELVALUE Attrs       { setLabel($2); }
   | COLOR LABELVALUE Attrs       { setColor($2);}

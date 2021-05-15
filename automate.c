@@ -22,8 +22,8 @@ void createNode(char* id){
 void initNode(node* n){
     if(!n->color)n->color = "BLACK";
     if(!n->bgcolor)n->bgcolor = "WHITE";
-    if(!n->init)n->init = "WEST";
-    if(!n->final)n->final = "EAST";
+    if(!n->init)n->init = "NULL";
+    if(!n->final)n->final = "NULL";
     if(!n->posx)n->posx = 0;
     if(!n->posy)n->posy = 0;
     if(!n->size)n->size = 30;
@@ -165,10 +165,51 @@ void renameObject(char* oldid, char* newid){
 }
 
 void editNode(char* id){
+    svg* cNode = casvg;
+    while (cNode && strcmp(id, cNode->head->id) != 0){
+        cNode = cNode->next;
+    }
+    if(strcmp(id, cNode->head->id) == 0){
+        if(currentNode->bgcolor)cNode->head->bgcolor = currentNode->bgcolor;
+        if(currentNode->color)cNode->head->color = currentNode->color;
+        if(currentNode->posx)cNode->head->posx = currentNode->posx;
+        if(currentNode->posy)cNode->head->posy = currentNode->posy;
+        if(currentNode->label)cNode->head->label = currentNode->label;
+        if(currentNode->size)cNode->head->size = currentNode->size;
+        if(currentNode->init)cNode->head->init = currentNode->init;
+        if(currentNode->final)cNode->head->final = currentNode->final;
+        free(currentNode);
+        currentNode=NULL;
+        return;
+    }
+    free(currentNode);
+    currentNode=NULL;
+    fprintf(stderr, "Error: ID not found\n");
     return;
 }
 
 void editEdge(char* idfrom, char* idto){
+    svgEdge* cEdge = esvg;
+    while (cEdge && (strcmp(idfrom, cEdge->head->idfrom) != 0) && (strcmp(idto, cEdge->head->idto) != 0)){
+        cEdge = cEdge->next;
+    }
+    if((strcmp(idfrom, cEdge->head->idfrom) == 0) && (strcmp(idto, cEdge->head->idto) == 0)){
+        if(currentNode->color)cEdge->head->color = currentNode->color;
+        if(currentNode->posx)cEdge->head->posx = currentNode->posx;
+        if(currentNode->posy)cEdge->head->posy = currentNode->posy;
+        if(currentNode->label)cEdge->head->label = currentNode->label;
+        if(currentEdge->path)cEdge->head->path = currentEdge->path;
+        free(currentNode);
+        currentNode=NULL;
+        free(currentEdge);
+        currentEdge=NULL;
+        return;
+    }
+    free(currentNode);
+    currentNode=NULL;
+    free(currentEdge);
+    currentEdge=NULL;
+    fprintf(stderr, "Error: ID not found\n");
     return;
 }
 
