@@ -66,7 +66,7 @@ void setPosition(int x, int y);
 void setColor(char* color);
 void setBackgroundColor(char* color);
 void setSize(int s);
-void setInitial(char* dir);
+void setInit(char* dir);
 void setFinal(char* dir);
 void setPath(char* path);
 

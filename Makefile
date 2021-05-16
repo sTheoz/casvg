@@ -4,7 +4,7 @@ but:=bin
 #	$(CC) -c lex.yy.c -o lex.yy.o
 #	$(CC) -c $(BIN).tab.c -o $(BIN).tab.o
 
-bin: lex yacc $(OBJ)
+bin: yacc lex $(OBJ)
 	$(CC) -o $(BIN).bin $(OBJ) -ll -lm
 
 lex: $(BIN).l

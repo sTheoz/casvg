@@ -18,7 +18,7 @@ extern FILE *yyin;
 }
 
 %token CREATE REMOVE MOVE DUMP EDIT RENAME NODE EDGE 
-%token FROM TO AT WITH LABEL SIZE COLOR BGCOLOR INITIAL 
+%token FROM TO AT WITH LABEL SIZE COLOR BGCOLOR INIT 
 %token FINAL NORTH WEST SOUTH EAST PATH FOREACH DO DONE 
 %token IS COMPLETE DETERMINISTIC MINIMIZE SHOW EOL
 %token ID NUM LABELVALUE
@@ -63,7 +63,7 @@ Attrs:
   | COLOR LABELVALUE Attrs       { setColor($2);}
   | BGCOLOR LABELVALUE Attrs     { setBackgroundColor($2); }
   | SIZE NUM Attrs               { setSize($2); }
-  | INITIAL LABELVALUE Attrs     { setInitial($2); }
+  | INIT LABELVALUE Attrs        { setInit($2); }
   | FINAL LABELVALUE Attrs       { setFinal($2); }
   | PATH LABELVALUE Attrs        { setPath($2); }
   | ID Attrs                     { addToList($1);}

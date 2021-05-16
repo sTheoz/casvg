@@ -4,6 +4,8 @@
 #include <stdio.h>
 #include <string.h>
 #include <strings.h>
+#include <time.h>
+#include <unistd.h>
 
 struct svg* casvg;
 struct svgEdge* esvg;
@@ -20,12 +22,16 @@ void createNode(char* id){
 }
 
 void initNode(node* n){
+    srand(time(NULL));
     if(!n->color)n->color = "BLACK";
-    if(!n->bgcolor)n->bgcolor = "WHITE";
+    if(!n->bgcolor)n->bgcolor = "none";
     if(!n->init)n->init = "NULL";
     if(!n->final)n->final = "NULL";
-    if(!n->posx)n->posx = 0;
-    if(!n->posy)n->posy = 0;
+    if(!n->posx){
+        sleep(1);
+        n->posx = rand() % 1891;
+    }
+    if(!n->posy)n->posy = rand() % 1051;
     if(!n->size)n->size = 30;
     if(!n->label)n->label = n->id;
 }
@@ -244,8 +250,6 @@ void dump(){
 }
 
 void dumpSVG(char* name){
-    name = name+1;
-    name[strlen(name)-1] = '\0';
     printf("Nom du fichier: %s.svg \n",name);
     draw(name, casvg, esvg);
     return;
@@ -292,7 +296,7 @@ void setSize(int s){
     return;
 }
 
-void setInitial(char* dir){
+void setInit(char* dir){
     if(!currentNode){
         currentNode = (node*) malloc(sizeof(node));
     }

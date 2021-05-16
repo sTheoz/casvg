@@ -42,7 +42,7 @@ show_regex	          (?i:show)
 
 id			      ([a-zA-Z_0-9]{1,15})
 num                     [0-9]+
-label                   \".*\"
+label                   \"([^"\\]*(\\.[^"\\]*)*)\"
 
 %%
 
@@ -62,7 +62,7 @@ label                   \".*\"
 {size_regex}            { return SIZE; }
 {color_regex}           { return COLOR; }
 {bgcolor_regex}         { return BGCOLOR; }
-{initial_regex}         { return INITIAL; }
+{initial_regex}         { return INIT; }
 {final_regex}           { return FINAL; }
 {north_regex}           { return NORTH; }
 {west_regex}            { return WEST; }
@@ -87,7 +87,10 @@ label                   \".*\"
       return ID;
 }
 {label} {
-      yylval.str = strdup(yytext);
+      char* l = strdup(yytext);
+      l = l+1;
+      l[strlen(l)-1] = '\0';
+      yylval.str = l;
       return LABELVALUE;
 }
 
