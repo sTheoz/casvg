@@ -1,7 +1,7 @@
-create node i at 100 300 INITIAL "WEST"
-create node z at 200 300 INITIAL "SOUTH"
-create node u at 200 200 label "m" color "red" bgcolor "lightgreen" INITIAL "NORTH"
-create node f at 300 300 INITIAL "EAST"
+create node i at 100 300 final WEST
+create node z at 200 300 final SOUTH
+create node u at 200 200 label "m" color "red" bgcolor "lightgreen" final NORTH
+create node f at 300 300 final EAST
 CREATE EDGE FROM i TO z LABEL "a" COLOR "blue"
 CREATE EDGE FROM z to z LABEL "a" COLOR "blue"
 create edge from z to u label "b" COLOR "blue"

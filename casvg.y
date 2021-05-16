@@ -21,6 +21,7 @@ extern FILE *yyin;
 %token FROM TO AT WITH LABEL SIZE COLOR BGCOLOR INIT 
 %token FINAL NORTH WEST SOUTH EAST PATH FOREACH DO DONE 
 %token IS COMPLETE DETERMINISTIC MINIMIZE SHOW EOL
+%token <str> DIRECTION
 %token ID NUM LABELVALUE
 
 %type <str> Expr
@@ -63,8 +64,8 @@ Attrs:
   | COLOR LABELVALUE Attrs       { setColor($2);}
   | BGCOLOR LABELVALUE Attrs     { setBackgroundColor($2); }
   | SIZE NUM Attrs               { setSize($2); }
-  | INIT LABELVALUE Attrs        { setInit($2); }
-  | FINAL LABELVALUE Attrs       { setFinal($2); }
+  | INIT DIRECTION Attrs        { setInit($2); }
+  | FINAL DIRECTION Attrs       { setFinal($2); }
   | PATH LABELVALUE Attrs        { setPath($2); }
   | ID Attrs                     { addToList($1);}
   | NUM NUM                      { move($1,$2); }

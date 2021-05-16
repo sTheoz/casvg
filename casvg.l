@@ -26,10 +26,6 @@ color_regex	          (?i:color)
 bgcolor_regex	    (?i:bgcolor)
 initial_regex	    (?i:initial)
 final_regex	          (?i:final)
-north_regex	          (?i:north)
-west_regex	          (?i:west)
-south_regex	          (?i:south)
-east_regex	          (?i:east)
 path_regex	          (?i:path)
 foreach_regex	    (?i:foreach)
 do_regex	          (?i:do)
@@ -39,6 +35,8 @@ complete_regex	    (?i:complete)
 deterministic_regex   (?i:deterministic)
 minimize_regex	    (?i:minimize)
 show_regex	          (?i:show)
+direction_regex       (?i:north)|(?i:south)|(?i:east)|(?i:west)
+
 
 id			      ([a-zA-Z_0-9]{1,15})
 num                     [0-9]+
@@ -64,10 +62,7 @@ label                   \"([^"\\]*(\\.[^"\\]*)*)\"
 {bgcolor_regex}         { return BGCOLOR; }
 {initial_regex}         { return INIT; }
 {final_regex}           { return FINAL; }
-{north_regex}           { return NORTH; }
-{west_regex}            { return WEST; }
-{south_regex}           { return SOUTH; }
-{east_regex}            { return EAST; }
+
 {path_regex}            { return PATH; }
 {foreach_regex}         { return FOREACH; }
 {do_regex}              { return DO; }
@@ -77,6 +72,11 @@ label                   \"([^"\\]*(\\.[^"\\]*)*)\"
 {deterministic_regex}   { return DETERMINISTIC; }
 {minimize_regex}        { return MINIMIZE; }
 {show_regex}            { return SHOW; }
+
+{direction_regex}     { 
+      yylval.str = strdup(yytext);
+      return DIRECTION; 
+}
 
 {num} {
       yylval.val = strtoul(yytext, NULL, 10);

@@ -50,6 +50,25 @@ void drawNodes(svg* nodeList, FILE* fd){
                         fprintf(fd, "  <path d=\"M %d %d l -8 8 m 16 0 l -8 -8\"  />\n", currentNode->head->posx, currentNode->head->posy+ currentNode->head->size);
             }
         }
+        if(strcmp(currentNode->head->final, "NULL") != 0){
+            if(strcmp(currentNode->head->final, "WEST") == 0){
+                // Transition de gauche à droite
+                        fprintf(fd, "  <path d=\"M %d %d l %d %d\" />\n", currentNode->head->posx-currentNode->head->size, currentNode->head->posy, -currentNode->head->size, 0);
+                        fprintf(fd, "  <path d=\"M %d %d l 8 8 m 0 -16 l -8 8\" />\n", currentNode->head->posx - currentNode->head->size*2, currentNode->head->posy);
+                    }else if( strcmp(currentNode->head->final, "EAST") == 0){
+                        // Transition de droite à gauche
+                        fprintf(fd, "  <path d=\"M %d %d l %d %d\" />\n", currentNode->head->posx+currentNode->head->size , currentNode->head->posy, currentNode->head->size, 0);
+                        fprintf(fd, "  <path d=\"M %d %d l -8 -8 m 0 16 l 8 -8\"/>\n", currentNode->head->posx + currentNode->head->size*2, currentNode->head->posy);
+                    }else if( strcmp(currentNode->head->final, "NORTH")==0){
+                        // Transition de haut en bas
+                        fprintf(fd, "  <path d=\"M %d %d l %d %d\"  />\n", currentNode->head->posx , currentNode->head->posy-currentNode->head->size, 0,-currentNode->head->size);
+                        fprintf(fd, "  <path d=\"M %d %d l -8 8 m 16 0 l -8 -8\"  />\n", currentNode->head->posx, currentNode->head->posy- currentNode->head->size*2);
+                    }else{
+                        // Transition de bas en haut
+                        fprintf(fd, "  <path d=\"M %d %d l %d %d\"  />\n", currentNode->head->posx , currentNode->head->posy+currentNode->head->size, 0,currentNode->head->size);
+                        fprintf(fd, "  <path d=\"M %d %d l 8 -8 m -16 0 l 8 8\"  />\n", currentNode->head->posx , currentNode->head->posy + currentNode->head->size*2);
+            }
+        }
         currentNode = currentNode->next;
     }
     fprintf(fd, " </g>\n");
