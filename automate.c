@@ -28,10 +28,13 @@ void initNode(node* n){
     if(!n->init)n->init = "NULL";
     if(!n->final)n->final = "NULL";
     if(!n->posx){
-        sleep(1);
-        n->posx = rand() % 1891;
+        fprintf(stderr, "ERREUR: Pas de position  pour le noeud %s\n", n->id);
+        exit(0);    
     }
-    if(!n->posy)n->posy = rand() % 1051;
+    if(!n->posy){
+        fprintf(stderr, "ERREUR: Pas de position  pour le noeud %s\n", n->id);
+        exit(0);
+    }
     if(!n->size)n->size = 30;
     if(!n->label)n->label = n->id;
 }

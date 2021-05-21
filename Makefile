@@ -16,7 +16,7 @@ yacc: $(BIN).y
 	dot -Tpng $(BIN).dot -o $(BIN).png
 
 %.o : %.c lex %.h
-	$(CC) -c $< -o $@
+	$(CC) -c $< -o $@ -lm
 
 clean:
 	rm -fv $(BIN).bin lex.yy.c lex.yy.o *~ $(OBJ) lol.svg

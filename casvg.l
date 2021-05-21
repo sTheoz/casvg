@@ -35,12 +35,12 @@ complete_regex	    (?i:complete)
 deterministic_regex   (?i:deterministic)
 minimize_regex	    (?i:minimize)
 show_regex	          (?i:show)
-direction_regex       (?i:north)|(?i:south)|(?i:east)|(?i:west)
+direction_regex       (?i:(north|south)-(east|west))|(?i:north)|(?i:south)|(?i:east)|(?i:west)
 
 
-id			      ([a-zA-Z_0-9]{1,15})
+id			      ([a-zA-Z][a-zA-Z_0-9]{0,15})
 num                     [0-9]+
-label                   \"([^"\\]*(\\.[^"\\]*)*)\"
+label                   \"([^"<>\\])*\"
 
 %%
 
@@ -73,8 +73,15 @@ label                   \"([^"\\]*(\\.[^"\\]*)*)\"
 {minimize_regex}        { return MINIMIZE; }
 {show_regex}            { return SHOW; }
 
-{direction_regex}     { 
-      yylval.str = strdup(yytext);
+{direction_regex}     {
+      // Mettre tous les caractères en majuscule
+      char* str = strdup(yytext);
+      for (int i = 0; str[i]!='\0'; i++) {
+            if(str[i] >= 'a' && str[i] <= 'z') {
+            str[i] = str[i] -32;
+            }
+      }
+      yylval.str = str;
       return DIRECTION; 
 }
 
