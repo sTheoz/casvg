@@ -28,12 +28,14 @@ void initNode(node* n){
     if(!n->init)n->init = "NULL";
     if(!n->final)n->final = "NULL";
     if(!n->posx){
+        fprintf(stderr, "%s: line :%d \n",__FILE__, __LINE__);
         fprintf(stderr, "ERREUR: Pas de position  pour le noeud %s\n", n->id);
-        exit(0);    
+        exit(1);    
     }
     if(!n->posy){
+        fprintf(stderr, "%s: line :%d \n",__FILE__, __LINE__);
         fprintf(stderr, "ERREUR: Pas de position  pour le noeud %s\n", n->id);
-        exit(0);
+        exit(1);
     }
     if(!n->size)n->size = 30;
     if(!n->label)n->label = n->id;
@@ -73,7 +75,9 @@ void removeNode(char* id){
         free(currentNodeList);
         currentNodeList = NULL;
     }else{
+        fprintf(stderr, "%s: line :%d \n",__FILE__, __LINE__);
         fprintf(stderr, "Error: ID not found\n");
+        exit(1);
     }
     return;
 }
@@ -95,7 +99,9 @@ void removeEdge(char* idfrom, char* idto){
         }
         free(currentEdgeList);
     }else{
+        fprintf(stderr, "%s: line :%d \n",__FILE__, __LINE__);
         fprintf(stderr, "Error: ID not found\n");
+        exit(1);
     }
     return;
 }
@@ -131,7 +137,9 @@ void doMove(){
                 currentSvg->head->posx = currentSvg->head->posx + pos->x;
                 currentSvg->head->posy = currentSvg->head->posy + pos->y;
             }else{
-                fprintf(stderr,"Error: ID not found");
+                fprintf(stderr, "%s: line :%d \n",__FILE__, __LINE__);
+                fprintf(stderr, "Error: ID not found\n");
+                exit(1);
             }
             prevList = currentStrList;
             currentStrList = currentStrList->next;
@@ -170,7 +178,7 @@ void renameObject(char* oldid, char* newid){
         return;
     }
     fprintf(stderr, "Error: ID not found\n");
-    return;
+    exit(1);
 }
 
 void editNode(char* id){
@@ -194,7 +202,7 @@ void editNode(char* id){
     free(currentNode);
     currentNode=NULL;
     fprintf(stderr, "Error: ID not found\n");
-    return;
+    exit(1);
 }
 
 void editEdge(char* idfrom, char* idto){
@@ -219,7 +227,7 @@ void editEdge(char* idfrom, char* idto){
     free(currentEdge);
     currentEdge=NULL;
     fprintf(stderr, "Error: ID not found\n");
-    return;
+    exit(1);
 }
 
 void dump(){

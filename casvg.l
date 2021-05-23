@@ -44,6 +44,7 @@ label                   \"([^"<>\\])*\"
 
 %%
 
+";"                     { return EOC; }
 {create_regex}          { return CREATE; }
 {remove_regex}          { return REMOVE; }
 {move_regex}            { return MOVE; }

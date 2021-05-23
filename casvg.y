@@ -20,7 +20,7 @@ extern FILE *yyin;
 %token CREATE REMOVE MOVE DUMP EDIT RENAME NODE EDGE 
 %token FROM TO AT WITH LABEL SIZE COLOR BGCOLOR INIT 
 %token FINAL NORTH WEST SOUTH EAST PATH FOREACH DO DONE 
-%token IS COMPLETE DETERMINISTIC MINIMIZE SHOW EOL
+%token IS COMPLETE DETERMINISTIC MINIMIZE SHOW EOL EOC
 %token <str> DIRECTION
 %token ID NUM LABELVALUE
 
@@ -40,12 +40,12 @@ S:
   ;
 
 Line:
-    EOL                           { printf("EOL\n"); }
-  | Expr                          { /*printf("Resultat : %lu\n",$1);*/ }
+    EOL                           { }
+  | Expr                          { }
   ;
 
 Expr:
-   CREATE NODE ID Attrs                      { createNode($3);setNode(); }
+   CREATE NODE ID Attrs                       { createNode($3);setNode(); }
   | CREATE EDGE FROM ID TO ID Attrs           { createEdge($4, $6); setEdge(); }
   | REMOVE NODE ID                            { removeNode($3); }
   | REMOVE EDGE FROM ID TO ID                 { removeEdge($4, $6); }
@@ -58,7 +58,7 @@ Expr:
   ;
 
 Attrs:
-    EOL                          { /*printf("Terminus\n");*/}
+    EOL                          { }
   | AT NUM NUM Attrs             { setPosition($2,$3); }
   | LABEL LABELVALUE Attrs       { setLabel($2); }
   | COLOR LABELVALUE Attrs       { setColor($2);}
@@ -69,6 +69,8 @@ Attrs:
   | PATH LABELVALUE Attrs        { setPath($2); }
   | ID Attrs                     { addToList($1);}
   | NUM NUM                      { move($1,$2); }
+  | EOC                     { }
+;
 
 %%
 
