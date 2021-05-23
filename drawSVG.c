@@ -98,7 +98,6 @@ void drawEdges(svgEdge* edgeList, svg* nodeList, FILE* fd){
     svgEdge* currentEdge = edgeList;
     svg* currentNode;
     double sizenfrom, sizento;
-    double lengthedge;
     double d, d2, d3, ratio, dx, dy, xFinal, yFinal, xa,xb,ya,yb;
     double dxB, dyB, ratio2, xInitial, yInitial;
     char* substr;
@@ -137,16 +136,16 @@ void drawEdges(svgEdge* edgeList, svg* nodeList, FILE* fd){
         yFinal = ya + dy;
         if(strcmp(currentEdge->head->path, "default") != 0){
             // Pas de vérification de conformité de la syntax pour le moment
-            if(substr = strstr(currentEdge->head->path, "@sx")){
+            if((substr = strstr(currentEdge->head->path, "@sx"))){
                 sprintf(substr, "%.3f", xInitial);
             }
-            if(substr = strstr(currentEdge->head->path, "@sy")){
+            if((substr = strstr(currentEdge->head->path, "@sy"))){
                 sprintf(substr, "%.3f", yInitial);
             }
-            if(substr = strstr(currentEdge->head->path, "@dx")){
+            if((substr = strstr(currentEdge->head->path, "@dx"))){
                 sprintf(substr, "%.3f", xFinal);
             }
-            if(substr = strstr(currentEdge->head->path, "@dy")){
+            if((substr = strstr(currentEdge->head->path, "@dy"))){
                 sprintf(substr, "%.3f", yFinal);
             }
             fprintf(fd, "%s\n", currentEdge->head->path);
