@@ -31,6 +31,7 @@ void drawNodes(svg* nodeList, FILE* fd){
     fprintf(fd, " <g stroke=\"black\" stroke-width=\"2\" fill=\"none\">\n");
     while(currentNode){
         fprintf(fd, "  <circle cx=\"%.2f\" cy=\"%.2f\" r=\"%.2f\" stroke=\"%s\" fill=\"%s\"/>\n", currentNode->head->posx, currentNode->head->posy, currentNode->head->size, currentNode->head->color, currentNode->head->bgcolor);
+        // Dessiner la flèche initial si besoin
         if(strcmp(currentNode->head->init, "NULL") != 0){
             if(strcmp(currentNode->head->init, "WEST") == 0){
                 // Transition de gauche à droite
@@ -56,6 +57,7 @@ void drawNodes(svg* nodeList, FILE* fd){
                 fprintf(fd, "  <path d=\"M %.2f %.2f m 8 -8 l %.2f %.2f\" marker-end=\"url(#head)\" />\n", currentNode->head->posx - currentNode->head->size*2, currentNode->head->posy+currentNode->head->size*2, currentNode->head->size,-currentNode->head->size);
             }
         }
+        // Dessiner la flèche finale si besoin
         if(strcmp(currentNode->head->final, "NULL") != 0){
             if(strcmp(currentNode->head->final, "WEST") == 0){
                 // Transition de gauche à droite
@@ -86,6 +88,7 @@ void drawNodes(svg* nodeList, FILE* fd){
     fprintf(fd, " </g>\n");
     currentNode = nodeList;
     fprintf(fd, " <g dominant-baseline=\"middle\" text-anchor=\"middle\" fill=\"black\">\n");
+    // Dessine les noeuds
     while(currentNode){
         fprintf(fd,"  <text x=\"%.2f\" y=\"%.2f\">%s</text>\n", currentNode->head->posx, currentNode->head->posy, currentNode->head->label);
         currentNode = currentNode->next;
@@ -118,6 +121,7 @@ void drawEdges(svgEdge* edgeList, svg* nodeList, FILE* fd){
             }
             currentNode = currentNode->next;
         }
+        // Calcul le début et la fin de l'arrête pour qu'elle soit bien collé au noeud avec le bon angle
         d = sqrt( pow( xb - xa, 2 ) + pow( yb - ya, 2 ) );
         d2 = d - sizento;
         d3 = d - sizenfrom;
@@ -135,7 +139,8 @@ void drawEdges(svgEdge* edgeList, svg* nodeList, FILE* fd){
         xFinal = xa + dx;
         yFinal = ya + dy;
         if(strcmp(currentEdge->head->path, "default") != 0){
-            // Pas de vérification de conformité de la syntax pour le moment
+            // Pas de vérification de conformité de la syntax
+            // Remplacement des @xx
             if((substr = strstr(currentEdge->head->path, "@sx"))){
                 sprintf(substr, "%.3f", xInitial);
             }
@@ -157,7 +162,9 @@ void drawEdges(svgEdge* edgeList, svg* nodeList, FILE* fd){
                     fprintf(fd, "  <path d=\"M %.2f %.2f l -11 2 m 9 9 l 2 -11\" stroke=\"%s\"/>\n", xa+(sizenfrom/3)-((sizenfrom/3)*2), ya+sizenfrom, currentEdge->head->color);
                     fprintf(fd, "  <text x=\"%.2f\" y=\"%.2f\">%s</text>\n", (xb + xa)/2 , (yb + ya)/2 + sizenfrom/2*5 , currentEdge->head->label);
                 }else{
+                    // Dessine toutes les arrêtes
                     fprintf(fd, "  <path d=\"M %f %f L %f %f\" stroke=\"%s\" marker-end=\"url(#head)\" />\n",  xInitial, yInitial, xFinal, yFinal, currentEdge->head->color);
+                    // Dessine le label des arrêtes
                     if(xa < xb){
                         // Transition de gauche à droite
                         fprintf(fd, "  <text x=\"%f\" y=\"%f\">%s</text>\n", (xFinal + xInitial)/2, (yFinal + yInitial)/2 - sizenfrom/6, currentEdge->head->label);

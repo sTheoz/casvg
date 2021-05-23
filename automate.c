@@ -14,6 +14,7 @@ struct edge* currentEdge;
 struct strList* currentStrList;
 struct position* pos;
 
+// Créer un noeud
 void createNode(char* id){
     if(!currentNode){
         currentNode = (node*) malloc(sizeof(node));
@@ -21,6 +22,7 @@ void createNode(char* id){
     currentNode->id = id;
 }
 
+// Initialise un noeud avec des valeurs de base
 void initNode(node* n){
     srand(time(NULL));
     if(!n->color)n->color = "BLACK";
@@ -41,6 +43,7 @@ void initNode(node* n){
     if(!n->label)n->label = n->id;
 }
 
+// Initialise les noeuds avec des valeurs de base
 void initEdge(edge* e){
     if(!e->color)e->color = "BLACK";
     if(!e->path)e->path = "default";
@@ -48,6 +51,7 @@ void initEdge(edge* e){
     if(!e->posy)e->posy = 0;
 }
 
+// Créer une arrête
 void createEdge(char* idfrom, char* idto){
     if(!currentEdge){
         currentEdge = (edge*) malloc(sizeof(edge));
@@ -57,6 +61,7 @@ void createEdge(char* idfrom, char* idto){
     return;
 }
 
+// Supprime un noeud de la liste
 void removeNode(char* id){
     svg* currentNodeList = casvg;
     svg* prevNode = NULL;
@@ -82,6 +87,7 @@ void removeNode(char* id){
     return;
 }
 
+// Supprime une arrête de la liste
 void removeEdge(char* idfrom, char* idto){
     svgEdge* currentEdgeList = esvg;
     svgEdge* prevEdge = NULL;
@@ -106,6 +112,7 @@ void removeEdge(char* idfrom, char* idto){
     return;
 }
 
+// Initialise les valeurs des attributs pour la commande Move
 void move(double dx, double dy){
     if(!pos){
         pos = (position*) malloc(sizeof(position));
@@ -115,6 +122,7 @@ void move(double dx, double dy){
     return;
 }
 
+// Bouge les noeuds de la liste currentStrList ou tous les noeuds si celle-ci est vide
 void doMove(){
     if(!currentStrList){
         svg* currentSvg = casvg;
@@ -151,6 +159,7 @@ void doMove(){
     return;
 }
 
+// Ajoute dans les id des noeuds à bouger dans currentStrList
 void addToList(char* id){
     strList* list = (strList*) malloc(sizeof(strList));
     list->val = id;
@@ -181,6 +190,7 @@ void renameObject(char* oldid, char* newid){
     exit(1);
 }
 
+// Modifier un noeud en fonction de son id
 void editNode(char* id){
     svg* cNode = casvg;
     while (cNode && strcmp(id, cNode->head->id) != 0){
@@ -205,6 +215,7 @@ void editNode(char* id){
     exit(1);
 }
 
+// Modifier une arrête
 void editEdge(char* idfrom, char* idto){
     svgEdge* cEdge = esvg;
     while (cEdge && (strcmp(idfrom, cEdge->head->idfrom) != 0) && (strcmp(idto, cEdge->head->idto) != 0)){
@@ -230,6 +241,7 @@ void editEdge(char* idfrom, char* idto){
     exit(1);
 }
 
+// Afficher dans la console les infos du graphe
 void dump(){
     printf("Nodes:\n");
     while(casvg){
@@ -260,12 +272,14 @@ void dump(){
     return;
 }
 
+// Dessine le SVG
 void dumpSVG(char* name){
     printf("Nom du fichier: %s.svg \n",name);
     draw(name, casvg, esvg);
     return;
 }
 
+// Enregistre le label
 void setLabel(char* label){
     if(!currentNode){
         currentNode = (node*) malloc(sizeof(node));
@@ -274,6 +288,7 @@ void setLabel(char* label){
     return;
 }
 
+// Enregistre les positions
 void setPosition(double x, double y){
     if(!currentNode){
         currentNode = (node*) malloc(sizeof(node));
@@ -283,6 +298,7 @@ void setPosition(double x, double y){
     return;
 }
 
+// Enregistre la couleur
 void setColor(char* color){
     if(!currentNode){
         currentNode = (node*) malloc(sizeof(node));
@@ -291,6 +307,7 @@ void setColor(char* color){
     return;
 }
 
+// Enregistre la couleur de fond
 void setBackgroundColor(char* color){
     if(!currentNode){
         currentNode = (node*) malloc(sizeof(node));
@@ -299,6 +316,7 @@ void setBackgroundColor(char* color){
     return;
 }
 
+// Enregistre la taille
 void setSize(double s){
     if(!currentNode){
         currentNode = (node*) malloc(sizeof(node));
@@ -307,6 +325,7 @@ void setSize(double s){
     return;
 }
 
+// Enregistre la direction de la flèche initial
 void setInit(char* dir){
     if(!currentNode){
         currentNode = (node*) malloc(sizeof(node));
@@ -315,6 +334,7 @@ void setInit(char* dir){
     return;
 }
 
+// Enregistre la direction de la flèche finale
 void setFinal(char* dir){
     if(!currentNode){
         currentNode = (node*) malloc(sizeof(node));
@@ -323,6 +343,7 @@ void setFinal(char* dir){
     return;
 }
 
+// Enregistre le code du path
 void setPath(char* path){
     if(!currentEdge){
         currentEdge = (edge*) malloc(sizeof(edge));
@@ -331,6 +352,7 @@ void setPath(char* path){
     return;
 }
 
+// Met un noeud dans la liste globale
 void setNode(){
     initNode(currentNode);
     svg* newsvg = (svg*) malloc(sizeof(svg));
@@ -349,6 +371,7 @@ void setNode(){
     return;
 }
 
+// Met une arrete dans la liste globale
 void setEdge(){
     if(currentNode->label)currentEdge->label = currentNode->label;
     if(currentNode->color)currentEdge->color = currentNode->color;
