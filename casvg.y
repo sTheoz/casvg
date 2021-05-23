@@ -13,7 +13,7 @@ extern FILE *yyin;
 %}
 
 %union{
-   long val;
+   double val;
    char* str;
 }
 

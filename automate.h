@@ -11,12 +11,12 @@ typedef struct position position;
 struct node
 {
     char* id;
-    int posx;
-    int posy;
+    double posx;
+    double posy;
     char* label;
     char* color;
     char* bgcolor;
-    int size;
+    double size;
     char* init;
     char* final;
 };
@@ -27,8 +27,8 @@ struct edge{
     char* label;
     char* path;
     char* color;
-    int posx;
-    int posy;
+    double posx;
+    double posy;
 };
 
 struct svg{
@@ -47,25 +47,25 @@ struct strList{
 };
 
 struct position{
-    int x;
-    int y;
+    double x;
+    double y;
 };
 
 void createNode(char* id);
 void createEdge(char* idfrom, char* idto);
 void removeNode(char* id);
 void removeEdge(char* idfrom, char* idto);
-void move(int dx, int dy);
+void move(double dx, double dy);
 void renameObject(char* oldid, char* newid);
 void editNode(char* id);
 void editEdge(char* idfrom, char* idto);
 void dump();
 void dumpSVG(char* name);
 void setLabel(char* label);
-void setPosition(int x, int y);
+void setPosition(double x, double y);
 void setColor(char* color);
 void setBackgroundColor(char* color);
-void setSize(int s);
+void setSize(double s);
 void setInit(char* dir);
 void setFinal(char* dir);
 void setPath(char* path);

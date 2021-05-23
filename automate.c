@@ -100,7 +100,7 @@ void removeEdge(char* idfrom, char* idto){
     return;
 }
 
-void move(int dx, int dy){
+void move(double dx, double dy){
     if(!pos){
         pos = (position*) malloc(sizeof(position));
     }
@@ -228,10 +228,10 @@ void dump(){
         printf("ID: %s\n", casvg->head->id);
         printf("Color: %s\n", casvg->head->color);
         printf("Background color: %s\n", casvg->head->bgcolor);
-        printf("X: %d\n", casvg->head->posx);
-        printf("Y: %d\n", casvg->head->posy);
+        printf("X: %f.2\n", casvg->head->posx);
+        printf("Y: %f.2\n", casvg->head->posy);
         printf("Label: %s\n", casvg->head->label);
-        printf("Size: %d\n", casvg->head->size);
+        printf("Size: %f.2\n", casvg->head->size);
         printf("Final: %s\n", casvg->head->final);
         printf("Initial: %s\n", casvg->head->init);
         printf("========\n");
@@ -242,8 +242,8 @@ void dump(){
         printf("ID From: %s\n", esvg->head->idfrom);
         printf("ID To: %s\n", esvg->head->idto);
         printf("Color: %s\n", esvg->head->color);
-        printf("X: %d\n", esvg->head->posx);
-        printf("Y: %d\n", esvg->head->posy);
+        printf("X: %f.2\n", esvg->head->posx);
+        printf("Y: %f.2\n", esvg->head->posy);
         printf("Label: %s\n", esvg->head->label);
         printf("Path: %s\n", esvg->head->path);
         printf("========\n");
@@ -266,7 +266,7 @@ void setLabel(char* label){
     return;
 }
 
-void setPosition(int x, int y){
+void setPosition(double x, double y){
     if(!currentNode){
         currentNode = (node*) malloc(sizeof(node));
     }
@@ -291,7 +291,7 @@ void setBackgroundColor(char* color){
     return;
 }
 
-void setSize(int s){
+void setSize(double s){
     if(!currentNode){
         currentNode = (node*) malloc(sizeof(node));
     }

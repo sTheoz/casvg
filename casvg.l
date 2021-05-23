@@ -39,7 +39,7 @@ direction_regex       (?i:(north|south)-(east|west))|(?i:north)|(?i:south)|(?i:e
 
 
 id			      ([a-zA-Z][a-zA-Z_0-9]{0,15})
-num                     [0-9]+
+num                     [0-9]+|[0-9]+.[0.9]+
 label                   \"([^"<>\\])*\"
 
 %%
@@ -86,7 +86,7 @@ label                   \"([^"<>\\])*\"
 }
 
 {num} {
-      yylval.val = strtoul(yytext, NULL, 10);
+      yylval.val = strtof(yytext, NULL);
       return NUM;
 }
 {id} {
