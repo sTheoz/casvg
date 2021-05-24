@@ -1,4 +1,4 @@
-# Compilatipn project - casvg
+# Compilation project - casvg
 
 ## Launch the program
 
