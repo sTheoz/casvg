@@ -5,20 +5,18 @@
 #include <string.h>
 
 bool isComplete(svgEdge* edges, svg* nodes){
-    char* alphabet;
+    char* alphabet, *myLabels;
     alphabet = getAlphabet(edges);
     svg* currentNode = nodes;
     svgEdge* listEdges;
-    printf("ALOOOOOOO\n");
     while(currentNode != NULL){
-        if(strcmp(currentNode->head->final, "NULL") != 0){
-            printf("Noeud : %s \n", currentNode->head->id);
-            listEdges = getEdgesForNode(edges, currentNode->head->id);
-            printf("1\n");
-            if(!checkAlphabetOnEdges(listEdges, alphabet))return false;
-            printf("2\n");
-            clearList(listEdges);
-            printf("3\n");
+        printf("Noeud: %s\n",currentNode->head->id);
+        myLabels = getAlphabetForNode(edges, currentNode->head->id);
+        if(strcmp(currentNode->head->final, "NULL") == 0){
+            if(!checkAlphabet(myLabels, alphabet)){
+                printf("Oui je suis faux ! \n");
+                return false;
+            }
         }
         currentNode = currentNode->next;
     }
@@ -47,19 +45,12 @@ void clearList(svgEdge* le){
     }
 }
 
-bool checkAlphabetOnEdges(svgEdge* le, char* alpha){
-    svgEdge* currentEdge = le;
-    char c;
-    int size, i;
+bool checkAlphabet(char* myLabels, char* alpha){
     bool isIn;
-    size = strlen(alpha);
-    for(i = 0; i < size; i++){
+    for(int i = 0; i < strlen(alpha); i++){
         isIn = false;
-        currentEdge = le;
-        while(currentEdge != NULL){
-            printf("%s\n", currentEdge->head->label);
-            if(inList(alpha, currentEdge->head->label))isIn= true;
-            currentEdge = currentEdge->next;
+        for(int j = 0 ; j < strlen(myLabels); j++){
+            if(alpha[i] == myLabels[j])isIn=true;
         }
         if(!isIn)return false;
     }
@@ -113,5 +104,25 @@ char* getAlphabet(svgEdge* edges){
         }
         currentEdges = currentEdges->next;
     }
+    return alphabet;
+}
+
+char* getAlphabetForNode(svgEdge* edges, char* idNode){
+    svgEdge* currentEdge = edges;
+    char* alphabet;
+    int index=0, sizeAlpha = 40;
+    alphabet = (char*) malloc(sizeof(char) * sizeAlpha);
+    for(int i = 0 ; i < sizeAlpha ; i++){
+        alphabet[i] = '\0';
+    }
+    while(currentEdge != NULL){
+        if(strcmp(currentEdge->head->idfrom, idNode)==0){
+            printf("Je met %s\n", currentEdge->head->label);
+            alphabet[index] = currentEdge->head->label[0];
+            index++;
+        }
+        currentEdge = currentEdge->next;
+    }
+    printf("alpha :  %s\n", alphabet);
     return alphabet;
 }
