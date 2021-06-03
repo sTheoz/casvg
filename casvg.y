@@ -57,8 +57,8 @@ Expr:
   | DUMP EOL        				                  { dump(); }
   | DUMP LABELVALUE                           { dumpSVG($2); }
   | IS COMPLETE                               { printf("Is complete ? : %d \n",isComplete(getEdges(), getNodes())); }
-  | COMPLETE WITH ID Attrs                    { printf("COMPlete with \n"); }
-  | SHOW COMPLETE LABELVALUE                  { /*updateNonCompleteColor($3); */}
+  | COMPLETE WITH ID AT NUM NUM               { complete(getEdges(), getNodes(), $3, $5, $6); }
+  | SHOW COMPLETE LABELVALUE                  { showComplete(getEdges(), getNodes(), $3); }
   | IS DETERMINISTIC                          { printf("Is determin\n"); }
   | SHOW DETERMINISTIC LABELVALUE             { /* updateNonDeterministicColor($3); */}
   | SHOW LABELVALUE                           { /*printf("%s", isAccepted($2) ? "true" : "false"); */}

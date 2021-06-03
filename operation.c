@@ -23,6 +23,66 @@ bool isComplete(svgEdge* edges, svg* nodes){
     return true;
 }
 
+void showComplete(svgEdge* edges, svg* nodes, char* color){
+    char* alphabet, *myLabels;
+    alphabet = getAlphabet(edges);
+    svg* currentNode = nodes;
+    svgEdge* listEdges;
+    while(currentNode != NULL){
+        printf("Noeud: %s\n",currentNode->head->id);
+        myLabels = getAlphabetForNode(edges, currentNode->head->id);
+        if(strcmp(currentNode->head->final, "NULL") == 0){
+            if(!checkAlphabet(myLabels, alphabet)){
+                setBackgroundColor(color);
+                editNode(currentNode->head->id);
+            }
+        }
+        currentNode = currentNode->next;
+    }
+    return true;
+}
+
+void complete(svgEdge* edges, svg* nodes, char* id, double x, double y){
+    setPosition(x,y);
+    createNode(id);
+    setNode();
+
+    char* alphabet, *myLabels;
+    alphabet = getAlphabet(edges);
+    
+    char* labelAlpha;
+    labelAlpha = malloc(sizeof(char)*strlen(alphabet)*2);
+    int j=0;
+    for(int i = 0 ; i < strlen(alphabet); i++){
+        labelAlpha[j] = alphabet[i];
+        j++;
+        labelAlpha[j] = ',';
+        j++;
+    }
+    labelAlpha[j-1]='\0';
+    setLabel(labelAlpha);
+    createEdge(id, id); 
+    setEdge();
+
+    svg* currentNode = nodes;
+    svgEdge* listEdges;
+    while(currentNode != NULL){
+        printf("Noeud: %s\n",currentNode->head->id);
+        myLabels = getAlphabetForNode(edges, currentNode->head->id);
+        if(strcmp(currentNode->head->final, "NULL") == 0){
+            if(!checkAlphabet(myLabels, alphabet)){
+                /*
+                Get les lettres manquantes
+                Créer un label avec
+                Créer l'arrete avec le label qui va de currentNode  vers le noeud id
+                */
+
+            }
+        }
+        currentNode = currentNode->next;
+    }
+}
+
 bool inList(char* l, char* c){
     int i = 0;
     if(!l)return false;
@@ -35,15 +95,6 @@ bool inList(char* l, char* c){
     return false;
 }
 
-void clearList(svgEdge* le){
-    svgEdge* currentEdge = le;
-    svgEdge* predEdge;
-    while(currentEdge != NULL){
-        predEdge = currentEdge;
-        currentEdge = currentEdge->next;
-        free(predEdge);
-    }
-}
 
 bool checkAlphabet(char* myLabels, char* alpha){
     bool isIn;
@@ -55,38 +106,6 @@ bool checkAlphabet(char* myLabels, char* alpha){
         if(!isIn)return false;
     }
     return true;
-}
-
-
-svgEdge* getEdgesForNode(svgEdge* le, char* node){
-    svgEdge* listEdges;
-    listEdges = (svgEdge*) malloc(sizeof(svgEdge));
-    svgEdge* rootEdges = listEdges;
-    svgEdge* currentEdge = le;
-    while(currentEdge != NULL){
-        /*printf("ras le cul %s pour %s \n",currentEdge->head->idfrom, node);
-        printf("ras le cul %s\n",currentEdge->head->label);*/
-        if(strcmp(currentEdge->head->idfrom, node) == 0){
-           if(listEdges->head != NULL){
-               listEdges->next = (svgEdge*) malloc(sizeof(svgEdge));
-               listEdges = listEdges->next;
-               listEdges->next = NULL;
-           }
-           listEdges->head = currentEdge->head;
-
-        }
-        currentEdge = currentEdge->next;
-    }
-    if(rootEdges->head == NULL)return NULL;
-    /*printf("WTF\n");
-    while(rootEdges != NULL){
-        if(rootEdges->head == NULL){
-            printf("YO\n");
-        }
-        printf("roooott %s \n", rootEdges->head->label);
-        rootEdges=rootEdges->next;
-    }*/
-    return rootEdges;
 }
 
 char* getAlphabet(svgEdge* edges){
@@ -117,9 +136,11 @@ char* getAlphabetForNode(svgEdge* edges, char* idNode){
     }
     while(currentEdge != NULL){
         if(strcmp(currentEdge->head->idfrom, idNode)==0){
-            printf("Je met %s\n", currentEdge->head->label);
-            alphabet[index] = currentEdge->head->label[0];
-            index++;
+            if(!inList(alphabet, currentEdge->head->label)){
+                printf("Je met %s\n", currentEdge->head->label);
+                alphabet[index] = currentEdge->head->label[0];
+                index++;
+            }
         }
         currentEdge = currentEdge->next;
     }
