@@ -1,5 +1,5 @@
 BIN= casvg
-OBJ=  $(BIN).tab.o automate.o lex.yy.o drawSVG.o
+OBJ=  $(BIN).tab.o automate.o lex.yy.o drawSVG.o operation.o
 but:=bin
 CFLAGS=-Wall -Wextra -g 
 

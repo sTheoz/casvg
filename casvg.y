@@ -5,6 +5,7 @@
 #include <math.h>
 #include <string.h>
 #include <assert.h>
+#include "operation.h"
 #include "automate.h"
 int yyerror(char*);
 int yylex(void);
@@ -55,6 +56,12 @@ Expr:
   | EDIT EDGE FROM ID TO ID WITH Attrs        { editEdge($4,$6); }
   | DUMP EOL        				                  { dump(); }
   | DUMP LABELVALUE                           { dumpSVG($2); }
+  | IS COMPLETE                               { isComplete(getEdges(), getNodes()); }
+  | COMPLETE WITH ID Attrs                    { printf("COMPlete with \n"); }
+  | SHOW COMPLETE LABELVALUE                  { /*updateNonCompleteColor($3); */}
+  | IS DETERMINISTIC                          { printf("Is determin\n"); }
+  | SHOW DETERMINISTIC LABELVALUE             { /* updateNonDeterministicColor($3); */}
+  | SHOW LABELVALUE                           { /*printf("%s", isAccepted($2) ? "true" : "false"); */}
   ;
 
 Attrs:
@@ -64,12 +71,12 @@ Attrs:
   | COLOR LABELVALUE Attrs       { setColor($2);}
   | BGCOLOR LABELVALUE Attrs     { setBackgroundColor($2); }
   | SIZE NUM Attrs               { setSize($2); }
-  | INIT DIRECTION Attrs        { setInit($2); }
-  | FINAL DIRECTION Attrs       { setFinal($2); }
+  | INIT DIRECTION Attrs         { setInit($2); }
+  | FINAL DIRECTION Attrs        { setFinal($2); }
   | PATH LABELVALUE Attrs        { setPath($2); }
   | ID Attrs                     { addToList($1);}
   | NUM NUM                      { move($1,$2); }
-  | EOC                     { }
+  | EOC                          { }
 ;
 
 %%

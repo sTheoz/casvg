@@ -78,4 +78,7 @@ void initNode(node* n);
 void initEdge(edge* e);
 void addToList(char* id);
 
+svgEdge* getEdges();
+svg* getNodes();
+
 #endif

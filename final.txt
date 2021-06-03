@@ -8,5 +8,6 @@ create edge from z to u label "b" COLOR "blue"
 create edge from u to z label "b" 
 create edge from z to f label "a"
 CREATE EDGE FROM i to u LABEL "b"
-CREATE edge FROM u to u LABEL "b" color "orange"
+CREATE edge FROM u to u LABEL "a" color "orange"
+IS complete
 dump "lol"

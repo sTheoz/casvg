@@ -394,3 +394,11 @@ void setEdge(){
     currentEdge = NULL;
     return;
 }
+
+svgEdge* getEdges(){
+    return esvg;
+}
+
+svg* getNodes(){
+    return casvg;
+}
