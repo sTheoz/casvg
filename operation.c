@@ -9,7 +9,6 @@ bool isComplete(svgEdge* edges, svg* nodes){
     alphabet = getAlphabet(edges);
     svg* currentNode = nodes;
     while(currentNode != NULL){
-        printf("Noeud: %s\n",currentNode->head->id);
         myLabels = getAlphabetForNode(edges, currentNode->head->id);
         if(strcmp(currentNode->head->final, "NULL") == 0){
             if(!checkAlphabet(myLabels, alphabet)){
@@ -26,7 +25,6 @@ void showComplete(svgEdge* edges, svg* nodes, char* color){
     alphabet = getAlphabet(edges);
     svg* currentNode = nodes;
     while(currentNode != NULL){
-        printf("Noeud: %s\n",currentNode->head->id);
         myLabels = getAlphabetForNode(edges, currentNode->head->id);
         if(strcmp(currentNode->head->final, "NULL") == 0){
             if(!checkAlphabet(myLabels, alphabet)){
@@ -44,12 +42,11 @@ void complete(svgEdge* edges, svg* nodes, char* id, double x, double y){
     setNode();
     char* alphabet, *myLabels, *missedLab;
     alphabet = getAlphabet(edges);
-    char* labelAlpha, *labelB;
+    char* labelB;
     int j=0;
 
     svg* currentNode = nodes;
     while(currentNode != NULL){
-        printf("Noeud: %s\n",currentNode->head->id);
         myLabels = getAlphabetForNode(edges, currentNode->head->id);
         if(strcmp(currentNode->head->final, "NULL") == 0){
             if(!checkAlphabet(myLabels, alphabet)){
@@ -101,7 +98,6 @@ char* getMissedLabels(char* myLabels, char* alphabet){
         };
     }
     missedChar[index] = '\0';
-    printf("Missed char %s\n", missedChar);
     return missedChar;
 }
 
@@ -127,7 +123,6 @@ char* getAlphabet(svgEdge* edges){
     }
     svgEdge* currentEdges = edges;
     while(currentEdges != NULL){
-        printf("currentEdges: %s to %s\n", currentEdges->head->idfrom, currentEdges->head->idto);
         if(!inList(alphabet, currentEdges->head->label)){
             alphabet[index] = currentEdges->head->label[0];
             index++;
@@ -148,19 +143,16 @@ char* getAlphabetForNode(svgEdge* edges, char* idNode){
     char* tempLabel;
     while(currentEdge != NULL){
         if(strcmp(currentEdge->head->idfrom, idNode)==0){
-            printf("idfrom : %s to %s\n", currentEdge->head->idfrom, currentEdge->head->idto);
             if((int)strlen(currentEdge->head->label) > 1){
                 tempLabel = strdup(currentEdge->head->label);
                 while( (found = strsep(&tempLabel,",")) != NULL ){
                     if(!inList(alphabet, found)){
-                        printf("Je met %s\n", found);
                         alphabet[index] = found[0];
                         index++;
                     }
                 }
             }else{
                 if(!inList(alphabet, currentEdge->head->label)){
-                    printf("Je met %s\n", currentEdge->head->label);
                     alphabet[index] = currentEdge->head->label[0];
                     index++;
                 }
@@ -182,16 +174,13 @@ char* getAlphabetForNodeDeter(svgEdge* edges, char* idNode){
     char* tempLabel;
     while(currentEdge != NULL){
         if(strcmp(currentEdge->head->idfrom, idNode)==0){
-            printf("idfrom : %s to %s\n", currentEdge->head->idfrom, currentEdge->head->idto);
             if((int)strlen(currentEdge->head->label) > 1){
                 tempLabel = strdup(currentEdge->head->label);
                 while( (found = strsep(&tempLabel,",")) != NULL ){
-                    printf("Je met %s\n", found);
                     alphabet[index] = found[0];
                     index++;
                 }
             }else{
-                printf("Je met %s\n", currentEdge->head->label);
                 alphabet[index] = currentEdge->head->label[0];
                 index++;
             }
@@ -204,33 +193,30 @@ char* getAlphabetForNodeDeter(svgEdge* edges, char* idNode){
 
 bool isDeterministic(svgEdge* edges, svg* nodes){
     char *myLabels;
-    bool isIn;
     svg* currentNode = nodes;
+    int countInit=0;
     while(currentNode != NULL){
-        printf("Noeud: %s\n",currentNode->head->id);
+        if(strcmp(currentNode->head->init,"NULL")!=0)countInit++;
         myLabels = getAlphabetForNodeDeter(edges, currentNode->head->id);
-        printf("labels : %s\n", myLabels);
-        for(int i = 0 ; i < strlen(myLabels); i++){
-            for(int j = i+1 ; j < strlen(myLabels) ; j++){
+        for(int i = 0 ; i < (int)strlen(myLabels); i++){
+            for(int j = i+1 ; j < (int)strlen(myLabels) ; j++){
                 if(myLabels[i] == myLabels[j])return false;
             }
         }
         currentNode = currentNode->next;
     }
+    if(countInit!=1)return false;
     return true;
 }
 
 void showDeterministic(svgEdge* edges, svg* nodes, char* color){
     char *myLabels;
-    bool isIn;
     svg* currentNode = nodes;
     svgEdge* currentEdge = edges;
     while(currentNode != NULL){
-        printf("Noeud: %s\n",currentNode->head->id);
         myLabels = getAlphabetForNodeDeter(edges, currentNode->head->id);
-        printf("labels : %s\n", myLabels);
-        for(int i = 0 ; i < strlen(myLabels); i++){
-            for(int j = i+1 ; j < strlen(myLabels) ; j++){
+        for(int i = 0 ; i < (int)strlen(myLabels); i++){
+            for(int j = i+1 ; j < (int)strlen(myLabels) ; j++){
                 if(myLabels[i] == myLabels[j]){
                     while(currentEdge){
                         if(strcmp(currentEdge->head->idfrom, currentNode->head->id) == 0 && strchr(currentEdge->head->label, myLabels[i])){
@@ -243,4 +229,47 @@ void showDeterministic(svgEdge* edges, svg* nodes, char* color){
         }
         currentNode = currentNode->next;
     }
+}
+
+bool isAccepted(svgEdge* edges, svg* nodes, char* str){
+    if(!isDeterministic(edges, nodes))return false;
+    svg* cNode = nodes;
+    char* currentNode;
+    currentNode = getInitial(nodes);
+    for(int i = 0 ; i < (int)strlen(str); i++){
+        currentNode = getNodeByLabel(edges, currentNode, str[i]);
+        if(!currentNode)return false;
+    }
+    while(cNode){
+        if(strcmp(cNode->head->id, currentNode) == 0){
+            if(strcmp(cNode->head->final, "NULL") != 0){
+                return true;
+            }
+            return false;
+        }
+        cNode = cNode->next;
+    }
+    return false;
+}
+
+char* getNodeByLabel(svgEdge* edges, char* idfrom, char label){
+    svgEdge* currentEdge = edges;
+    while(currentEdge){
+        if(strcmp(idfrom, currentEdge->head->idfrom) == 0 && strchr(currentEdge->head->label, label)){
+            return currentEdge->head->idto;
+        }
+        currentEdge = currentEdge->next;
+    }
+    return NULL;
+}
+
+char* getInitial(svg* nodes){
+    svg* currentNode = nodes;
+    while(currentNode){
+        if(strcmp(currentNode->head->init, "NULL") != 0){
+            return currentNode->head->id;
+        }
+        currentNode = currentNode->next;
+    }
+    return NULL;
 }

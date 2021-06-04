@@ -16,6 +16,7 @@ bool isDeterministic(svgEdge* edges, svg* nodes);
 char* getAlphabetForNodeDeter(svgEdge* edges, char* idNode);
 void showDeterministic(svgEdge* edges, svg* nodes, char* color);
 
-bool isAccepted(char* word);
-
+bool isAccepted(svgEdge* edges, svg* nodes, char* str);
+char* getNodeByLabel(svgEdge* edges, char* idfrom, char label);
+char* getInitial(svg* nodes);
 #endif

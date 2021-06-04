@@ -61,7 +61,7 @@ Expr:
   | SHOW COMPLETE LABELVALUE                  { showComplete(getEdges(), getNodes(), $3); }
   | IS DETERMINISTIC                          { printf("Is deterministic ? : %d \n", isDeterministic(getEdges(), getNodes())); }
   | SHOW DETERMINISTIC LABELVALUE             { showDeterministic(getEdges(), getNodes(), $3); }
-  | SHOW LABELVALUE                           { /*printf("%s", isAccepted($2) ? "true" : "false"); */}
+  | SHOW LABELVALUE                           { printf("Is accepted ? : %d\n", isAccepted(getEdges(), getNodes() , $2)); }
   ;
 
 Attrs:
