@@ -235,14 +235,23 @@ bool isAccepted(svgEdge* edges, svg* nodes, char* str){
     if(!isDeterministic(edges, nodes))return false;
     svg* cNode = nodes;
     char* currentNode;
+    char* path;
+    int indexpath = 0;
+    path = (char*) malloc(sizeof(char)* (int)strlen(str));
     currentNode = getInitial(nodes);
+    path[indexpath] = currentNode[0];
+    indexpath++;
     for(int i = 0 ; i < (int)strlen(str); i++){
         currentNode = getNodeByLabel(edges, currentNode, str[i]);
+        path[indexpath] = currentNode[0];
+        indexpath++;
         if(!currentNode)return false;
     }
+    path[indexpath] = '\0';
     while(cNode){
         if(strcmp(cNode->head->id, currentNode) == 0){
             if(strcmp(cNode->head->final, "NULL") != 0){
+                printf("Path: %s\n", path);
                 return true;
             }
             return false;
