@@ -8,13 +8,11 @@ bool isComplete(svgEdge* edges, svg* nodes){
     char* alphabet, *myLabels;
     alphabet = getAlphabet(edges);
     svg* currentNode = nodes;
-    svgEdge* listEdges;
     while(currentNode != NULL){
         printf("Noeud: %s\n",currentNode->head->id);
         myLabels = getAlphabetForNode(edges, currentNode->head->id);
         if(strcmp(currentNode->head->final, "NULL") == 0){
             if(!checkAlphabet(myLabels, alphabet)){
-                printf("Oui je suis faux ! \n");
                 return false;
             }
         }
@@ -27,7 +25,6 @@ void showComplete(svgEdge* edges, svg* nodes, char* color){
     char* alphabet, *myLabels;
     alphabet = getAlphabet(edges);
     svg* currentNode = nodes;
-    svgEdge* listEdges;
     while(currentNode != NULL){
         printf("Noeud: %s\n",currentNode->head->id);
         myLabels = getAlphabetForNode(edges, currentNode->head->id);
@@ -39,44 +36,37 @@ void showComplete(svgEdge* edges, svg* nodes, char* color){
         }
         currentNode = currentNode->next;
     }
-    return true;
 }
 
 void complete(svgEdge* edges, svg* nodes, char* id, double x, double y){
     setPosition(x,y);
     createNode(id);
     setNode();
-
-    char* alphabet, *myLabels;
+    char* alphabet, *myLabels, *missedLab;
     alphabet = getAlphabet(edges);
-    
-    char* labelAlpha;
-    labelAlpha = malloc(sizeof(char)*strlen(alphabet)*2);
+    char* labelAlpha, *labelB;
     int j=0;
-    for(int i = 0 ; i < strlen(alphabet); i++){
-        labelAlpha[j] = alphabet[i];
-        j++;
-        labelAlpha[j] = ',';
-        j++;
-    }
-    labelAlpha[j-1]='\0';
-    setLabel(labelAlpha);
-    createEdge(id, id); 
-    setEdge();
 
     svg* currentNode = nodes;
-    svgEdge* listEdges;
     while(currentNode != NULL){
         printf("Noeud: %s\n",currentNode->head->id);
         myLabels = getAlphabetForNode(edges, currentNode->head->id);
         if(strcmp(currentNode->head->final, "NULL") == 0){
             if(!checkAlphabet(myLabels, alphabet)){
-                /*
-                Get les lettres manquantes
-                Créer un label avec
-                Créer l'arrete avec le label qui va de currentNode  vers le noeud id
-                */
-
+                missedLab = getMissedLabels(myLabels, alphabet);
+                labelB = (char*) malloc(sizeof(char)*(int)strlen(missedLab)*2);
+                j=0;
+                for(int i = 0 ; i < (int)strlen(missedLab); i++){
+                    labelB[j] = missedLab[i];
+                    j++;
+                    labelB[j] = ',';
+                    j++;
+                }
+                labelB[j-1]='\0';
+                setLabel(strdup(labelB));
+                createEdge(currentNode->head->id, id);
+                setEdge();
+                free(labelB);
             }
         }
         currentNode = currentNode->next;
@@ -95,12 +85,32 @@ bool inList(char* l, char* c){
     return false;
 }
 
+char* getMissedLabels(char* myLabels, char* alphabet){
+    char* missedChar;
+    bool isIn;
+    int index=0;
+    missedChar = (char*) malloc(sizeof(char) * strlen(alphabet));
+    for(int i = 0; i < (int)strlen(alphabet); i++){
+        isIn = false;
+        for(int j = 0 ; j < (int)strlen(myLabels); j++){
+            if(alphabet[i] == myLabels[j])isIn=true;
+        }
+        if(!isIn){
+            missedChar[index] = alphabet[i];
+            index++;
+        };
+    }
+    missedChar[index] = '\0';
+    printf("Missed char %s\n", missedChar);
+    return missedChar;
+}
+
 
 bool checkAlphabet(char* myLabels, char* alpha){
     bool isIn;
-    for(int i = 0; i < strlen(alpha); i++){
+    for(int i = 0; i < (int)strlen(alpha); i++){
         isIn = false;
-        for(int j = 0 ; j < strlen(myLabels); j++){
+        for(int j = 0 ; j < (int)strlen(myLabels); j++){
             if(alpha[i] == myLabels[j])isIn=true;
         }
         if(!isIn)return false;
@@ -117,6 +127,7 @@ char* getAlphabet(svgEdge* edges){
     }
     svgEdge* currentEdges = edges;
     while(currentEdges != NULL){
+        printf("currentEdges: %s to %s\n", currentEdges->head->idfrom, currentEdges->head->idto);
         if(!inList(alphabet, currentEdges->head->label)){
             alphabet[index] = currentEdges->head->label[0];
             index++;
@@ -128,22 +139,34 @@ char* getAlphabet(svgEdge* edges){
 
 char* getAlphabetForNode(svgEdge* edges, char* idNode){
     svgEdge* currentEdge = edges;
-    char* alphabet;
+    char* alphabet, *found;
     int index=0, sizeAlpha = 40;
     alphabet = (char*) malloc(sizeof(char) * sizeAlpha);
     for(int i = 0 ; i < sizeAlpha ; i++){
         alphabet[i] = '\0';
     }
+    char* tempLabel;
     while(currentEdge != NULL){
         if(strcmp(currentEdge->head->idfrom, idNode)==0){
-            if(!inList(alphabet, currentEdge->head->label)){
-                printf("Je met %s\n", currentEdge->head->label);
-                alphabet[index] = currentEdge->head->label[0];
-                index++;
+            printf("idfrom : %s to %s\n", currentEdge->head->idfrom, currentEdge->head->idto);
+            if((int)strlen(currentEdge->head->label) > 1){
+                tempLabel = strdup(currentEdge->head->label);
+                while( (found = strsep(&tempLabel,",")) != NULL ){
+                    if(!inList(alphabet, found)){
+                        printf("Je met %s\n", found);
+                        alphabet[index] = found[0];
+                        index++;
+                    }
+                }
+            }else{
+                if(!inList(alphabet, currentEdge->head->label)){
+                    printf("Je met %s\n", currentEdge->head->label);
+                    alphabet[index] = currentEdge->head->label[0];
+                    index++;
+                }
             }
         }
         currentEdge = currentEdge->next;
     }
-    printf("alpha :  %s\n", alphabet);
     return alphabet;
 }

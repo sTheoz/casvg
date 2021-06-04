@@ -10,6 +10,7 @@ bool checkAlphabet(char* myLabels, char* alpha);
 bool isComplete(svgEdge* edges, svg* nodes);
 void showComplete(svgEdge* edges, svg* nodes, char* color);
 void complete(svgEdge* edges, svg* nodes, char* id, double x, double y);
+char* getMissedLabels(char* myLabels, char* alphabet);
 
 void updateNonCompleteColor(char* color);
 bool isDeterministic(svgEdge* edges, svg* nodes);
