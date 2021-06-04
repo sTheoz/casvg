@@ -59,8 +59,8 @@ Expr:
   | IS COMPLETE                               { printf("Is complete ? : %d \n",isComplete(getEdges(), getNodes())); }
   | COMPLETE WITH ID AT NUM NUM               { complete(getEdges(), getNodes(), $3, $5, $6); }
   | SHOW COMPLETE LABELVALUE                  { showComplete(getEdges(), getNodes(), $3); }
-  | IS DETERMINISTIC                          { printf("Is determin\n"); }
-  | SHOW DETERMINISTIC LABELVALUE             { /* updateNonDeterministicColor($3); */}
+  | IS DETERMINISTIC                          { printf("Is deterministic ? : %d \n", isDeterministic(getEdges(), getNodes())); }
+  | SHOW DETERMINISTIC LABELVALUE             { showDeterministic(getEdges(), getNodes(), $3); }
   | SHOW LABELVALUE                           { /*printf("%s", isAccepted($2) ? "true" : "false"); */}
   ;
 

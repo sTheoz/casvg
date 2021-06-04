@@ -12,9 +12,10 @@ void showComplete(svgEdge* edges, svg* nodes, char* color);
 void complete(svgEdge* edges, svg* nodes, char* id, double x, double y);
 char* getMissedLabels(char* myLabels, char* alphabet);
 
-void updateNonCompleteColor(char* color);
 bool isDeterministic(svgEdge* edges, svg* nodes);
-void updateNonDeterministicColor(char* color);
+char* getAlphabetForNodeDeter(svgEdge* edges, char* idNode);
+void showDeterministic(svgEdge* edges, svg* nodes, char* color);
+
 bool isAccepted(char* word);
 
 #endif

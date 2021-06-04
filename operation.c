@@ -170,3 +170,77 @@ char* getAlphabetForNode(svgEdge* edges, char* idNode){
     }
     return alphabet;
 }
+
+char* getAlphabetForNodeDeter(svgEdge* edges, char* idNode){
+    svgEdge* currentEdge = edges;
+    char* alphabet, *found;
+    int index=0, sizeAlpha = 40;
+    alphabet = (char*) malloc(sizeof(char) * sizeAlpha);
+    for(int i = 0 ; i < sizeAlpha ; i++){
+        alphabet[i] = '\0';
+    }
+    char* tempLabel;
+    while(currentEdge != NULL){
+        if(strcmp(currentEdge->head->idfrom, idNode)==0){
+            printf("idfrom : %s to %s\n", currentEdge->head->idfrom, currentEdge->head->idto);
+            if((int)strlen(currentEdge->head->label) > 1){
+                tempLabel = strdup(currentEdge->head->label);
+                while( (found = strsep(&tempLabel,",")) != NULL ){
+                    printf("Je met %s\n", found);
+                    alphabet[index] = found[0];
+                    index++;
+                }
+            }else{
+                printf("Je met %s\n", currentEdge->head->label);
+                alphabet[index] = currentEdge->head->label[0];
+                index++;
+            }
+        }
+        currentEdge = currentEdge->next;
+    }
+    return alphabet;
+}
+
+
+bool isDeterministic(svgEdge* edges, svg* nodes){
+    char *myLabels;
+    bool isIn;
+    svg* currentNode = nodes;
+    while(currentNode != NULL){
+        printf("Noeud: %s\n",currentNode->head->id);
+        myLabels = getAlphabetForNodeDeter(edges, currentNode->head->id);
+        printf("labels : %s\n", myLabels);
+        for(int i = 0 ; i < strlen(myLabels); i++){
+            for(int j = i+1 ; j < strlen(myLabels) ; j++){
+                if(myLabels[i] == myLabels[j])return false;
+            }
+        }
+        currentNode = currentNode->next;
+    }
+    return true;
+}
+
+void showDeterministic(svgEdge* edges, svg* nodes, char* color){
+    char *myLabels;
+    bool isIn;
+    svg* currentNode = nodes;
+    svgEdge* currentEdge = edges;
+    while(currentNode != NULL){
+        printf("Noeud: %s\n",currentNode->head->id);
+        myLabels = getAlphabetForNodeDeter(edges, currentNode->head->id);
+        printf("labels : %s\n", myLabels);
+        for(int i = 0 ; i < strlen(myLabels); i++){
+            for(int j = i+1 ; j < strlen(myLabels) ; j++){
+                if(myLabels[i] == myLabels[j]){
+                    while(currentEdge){
+                        if(strcmp(currentEdge->head->idfrom, currentNode->head->id) == 0 && strchr(currentEdge->head->label, myLabels[i])){
+                            currentEdge->head->color = color;
+                        }
+                        currentEdge = currentEdge->next;
+                    }
+                }
+            }
+        }
+        currentNode = currentNode->next;
+    }
+}
